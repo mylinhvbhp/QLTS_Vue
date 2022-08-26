@@ -1,0 +1,65 @@
+.form+.form{
+    margin-top:16px;
+}
+
+.form-title{
+    font-family: 'Roboto' Bold;
+}
+
+.form-line{
+    width: 80px;
+    height: 5px;
+    background-color: #019160;
+    margin:12px 0px;
+}
+
+.form-content{
+    display: grid;
+    grid-template-columns: auto auto auto;
+    gap: 16px;
+    min-width: 800px;
+}
+
+.form-item-two{
+    grid-column: span 2;
+}
+
+.form-item input::placeholder{
+    font-family: 'Roboto';
+    font-style: italic;
+    color:#9c9c9c;
+}
+
+.form-input{
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: end;
+    background-color: #ffffff;
+}
+
+.form-lable{
+    margin-bottom:4px;
+    white-space: nowrap;
+}
+
+.combo-form{
+    display: flex;
+}
+
+.combo-form__left{
+    margin-right: 16px;
+}
+
+.form__input{
+    margin:4px 0px 16px 0px;
+}
+
+.form__input::placeholder{
+    color:#000000;
+}
+
+.combo-icon{
+    position: absolute;
+    margin-right:5px;
+}

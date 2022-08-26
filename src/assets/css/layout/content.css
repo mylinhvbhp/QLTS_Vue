@@ -1,0 +1,56 @@
+.main-content{
+    padding:20px;
+}
+
+.content-top{
+    display: flex;
+    justify-content: space-between;
+}
+
+.content-top-left{
+    display: flex;
+}
+
+.search-input{
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    background-color: #ffffff;
+}
+
+.search-filter{
+    height: 35px;
+    width: 220px;
+    display: flex;
+    background-color: #ffffff;
+    align-items: center;
+}
+
+.search-filter msCombobox{
+    z-index: 2;
+}
+
+.search-input+.search-filter{
+    margin-left:11px;
+}
+
+.search-filter+.search-filter{
+    margin-left: 11px;
+}
+
+.content-seach-right{
+    display: flex;
+}
+
+.content-right-icon{
+    margin-left: 11px;
+}
+
+.content-table{
+    margin-top:20px;
+    border-radius: 5px 5px 0px 0px;
+    border: 1px solid #afafaf;
+    overflow-y: auto;
+    height: calc(100vh - 182px);
+}

@@ -1,0 +1,67 @@
+.tooltip{
+    position: absolute;
+    padding: 5px 7px;
+    background-color: #ffffff;
+    color:#000000;
+    font-weight: lighter !important;
+    display: none;
+    white-space: nowrap;
+    z-index: 999;
+    border: none;
+    border-radius: 4px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.25);
+    transition: all 0.5s ease;
+}
+
+.menu-item:hover .tooltip{
+    display:flex;
+    align-items: center;
+    margin-left: 40px;
+    transition: all 0.5s ease;
+}
+
+.menu.open .menu-item:hover .tooltip{
+    display: none;
+}
+
+.close-menu:hover .tooltip{
+    display: flex;
+    margin-left: 30px;
+}
+
+.open-menu:hover .tooltip{
+    display: flex;
+    align-items: center;
+    margin-left: 30px;
+}
+
+.header-item:hover .tooltip{
+    display:flex;
+    margin-top:5px;
+}
+
+.content-right-icon:hover .tooltip{
+    display:flex;
+    margin-top: 5px;
+}
+.function-item {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.function-item:hover .tooltip{
+    top:10px;
+    left:-20px;
+    display: initial;
+    position: relative;
+}
+
+.popup__close:hover .tooltip{
+    display: flex;
+    margin-top: 5px;
+}
+
+.th_tooltip:hover .tooltip{
+    display: flex;
+    margin-top: 50px;
+}

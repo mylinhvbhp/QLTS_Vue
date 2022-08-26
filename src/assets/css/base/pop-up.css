@@ -1,0 +1,133 @@
+.pop-up{
+    position: fixed;
+    /* display: flex;
+    justify-content: center;
+    align-items: center; */
+    top:0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.4);
+    z-index: 2;
+}
+
+.pop-up-container{
+    background-color: #fff;
+    position: absolute;
+    transform: translate(-50%,-50%);
+    top:50%;
+    left: 50%; 
+    /* overflow: auto;
+    height: 600px; */
+}
+
+.pop-up .btn-close{
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    top: 0;
+    right: 0;
+    font-size: 24px;
+    border-radius: 0px 4px 0px 4px;
+    border:unset;
+    background-color: #fff;
+}
+
+.pop-up .btn-close:hover{
+    color:tomato;
+    background-color: #fff;
+}
+
+.pop-up__header{
+    padding:24px 24px 0px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.pop-up-title{
+    font-size: 20px;
+    font-family: 'Roboto' Bold;
+}
+
+.pop-up__content{
+    margin:24px 24px;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+.pop-up-notice{
+    min-width: 200px;
+}
+
+.pop-up__text{
+    margin-left: 20px;
+}
+.pop-up__message{
+    margin:4px 0px;
+}
+
+.pop-up__icon{
+    float:left;
+    color:red;
+    width: 24px;
+    height: 100%;
+    margin-right: 10px;
+}
+
+.pop-up__icon i{
+    font-size: 24px;
+}
+
+.pop-up__footer{
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 0px 24px;
+    background-color: #f2f2f2;
+}
+
+#pop-up-notice .pop-up__footer{
+    background-color: #ffffff;
+    height: unset;
+    padding-bottom: 20px;
+}
+
+#pop-up__content-notice{
+    display: flex;
+    flex-direction: row;
+    width: 450px;
+}
+
+/* Pop-up Info Employee */
+
+#pop-up-employee .pop-up-container{
+    overflow: auto;
+}
+
+.pop-up__content-info{
+    display: flex;
+    flex-direction: row;
+    align-items: unset;
+}
+
+.info-avatar{
+    width: 150px;
+    height: 150px;
+    border:1px solid #bbb;
+    border-radius: 50%;
+    /* background-image: url(../../img/default-avatar.jpg); */
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-color: #000;
+}
+
+.pop-up__left{
+    margin-right: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}

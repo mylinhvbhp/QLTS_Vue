@@ -1,0 +1,100 @@
+@import url(./layout/header.css);
+@import url(./layout/menu.css);
+@import url(./layout/content.css);
+@import url(./base/icon.css);
+@import url(./base/input.css);
+@import url(./base/combobox.css);
+@import url(./base/button.css);
+@import url(./base/table.css);
+@import url(./base/paging.css);
+@import url(./base/pop-up.css);
+@import url(./base/form.css);
+@import url(./base/dropdown.css);
+@import url(./base/tooltip.css);
+@import url(./base/loading.css);
+@import url(./base/scroll.css);
+
+@font-face{
+    font-family: MISA Google Sans;
+    src: url(../font/GoogleSans-Regular.otf);
+}
+
+@font-face {
+    font-family: MISA Google Sans Bold;
+    src: url(../font/GoogleSans-Bold.otf);
+}
+
+@font-face {
+    font-family: MISA Google Sans Italic;
+    src: url(../font/GoogleSans-Italic.otf);
+}
+
+body{
+    font-family: 'Roboto';
+    font-size: 13px;
+    margin: 0;
+    background-color:  #f4f7ff;
+    margin-bottom: 10px;
+}
+
+.menu{
+    width: 66px;
+    min-height: 100vh;
+    position:absolute;
+    background-color: #1c3048;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: all 0.5s ease;
+    /* padding:0px 11px; */
+}
+
+.main{
+    display: flex;
+    position: absolute;
+    flex-direction: column;
+    left: 66px;
+    top: 44px;
+    width: calc(100% - 66px);
+    height: calc(100vh - 44px);
+    box-sizing: border-box;
+    transition: all 0.5s ease;
+}
+
+.header{
+    height: 44px;
+    background-color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    left:66px;
+    width: calc(100% - 66px);
+    position: absolute;
+    transition: all 0.5s ease;
+}
+
+.float-right{
+    text-align: right;
+    justify-content: end;
+}
+
+.text-center{
+    text-align: center;
+}
+
+.bg-row{
+    background-color: rgba(26, 164, 200,0.2) !important;
+}
+
+.border-red {
+    border: 1px solid #ff0000;
+}
+
+hr{
+    border-width: 0;
+    height: 1px;
+    background-color: #000;
+    margin: 0px 0px;
+}
+
+

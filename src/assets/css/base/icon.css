@@ -1,0 +1,214 @@
+.icon{
+    background-image: url('../../qlts-icon.svg') !important ;
+}
+
+.icon-header{
+    width: 18px;
+    height: 18px;
+}
+
+.icon-input{
+    position: absolute;
+    margin-left: 5px;
+}
+
+.icon-logo{
+    background: no-repeat -20px -680px;
+	width: 36px;
+	height: 36px;
+}
+
+.icon-close-menu{
+    background: no-repeat -421px -159px;
+	width: 15px;
+	height: 11px;
+    margin-left: 10px;
+    cursor: pointer;
+}
+
+.icon-toggle{
+    background: no-repeat -158px -293px;
+    width: 12px;
+    height: 7px;
+}
+
+.icon-dashboard{
+    background: no-repeat -21px -153px;
+    width: 22px;
+	height: 22px;
+}
+
+.icon-asset{
+    background: no-repeat -65px -153px;
+    width: 22px;
+	height: 22px;
+}
+
+.icon-assetHtdb{
+    background: no-repeat -110px -153px;
+    width: 21px;
+	height: 23px;
+}
+
+.icon-tool{
+    background: no-repeat -153px -153px;
+    width: 22px;
+	height: 22px;
+}
+
+.icon-category{
+    background: no-repeat -197px -155px;
+    width: 22px;
+	height: 18px;
+}
+
+.icon-search{
+    background: no-repeat -241px -153px;
+    width: 22px;
+	height: 22px;
+}
+
+.icon-report{
+    background: no-repeat -329px -153px;
+    width: 22px;
+	height: 22px;
+}
+
+.icon-less{
+    background: no-repeat -285px -417px;
+    width: 22px;
+	height: 22px;
+    cursor: pointer;
+    display: none;
+    transition: all 0.5s ease;
+}
+
+.icon-more{
+    background: no-repeat -329px -417px;
+	width: 22px;
+	height: 22px;
+    cursor: pointer;
+    transition: all 1.5s ease;
+}
+
+.icon-notify{
+    background: no-repeat -332px -109px;
+    width: 16px;
+    height: 20px;
+}
+
+.icon-system{
+    background: no-repeat -199px -23px;
+}
+
+.icon-support{
+    background: no-repeat -67px -67px;
+}
+
+.icon-info{
+    background: no-repeat -23px -23px;
+}
+
+.icon-up{
+    background: no-repeat -28px -338px;
+	width: 8px;
+	height: 5px;
+    margin-bottom:4px;
+    cursor: pointer;
+}
+
+.icon-down{
+    background: no-repeat -72px -338px;
+	width: 8px;
+	height: 5px;
+    cursor: pointer;
+}
+
+.icon-search-input{
+    background: no-repeat -243px -23px;
+	width: 18px;
+	height: 18px;
+    position: absolute;
+    margin-left: 11px;
+}
+
+.icon-search-filter{
+    background: no-repeat -243px -69px;
+	width: 17px;
+	height: 16px;
+    position: absolute;
+    z-index: 1;
+    margin-left: 10px;
+}
+
+.icon-button-add{
+    background: no-repeat -467px -423px;
+	width: 10px;
+	height: 10px;
+    margin-right: 11px;
+}
+
+.icon-excel{
+    background: no-repeat -287px -111px;
+	width: 18px;
+	height: 17px;
+}
+
+.icon-delete{
+    background: no-repeat -463px -111px;
+	width: 18px;
+	height: 18px;
+}
+
+.icon-pagination-last{
+    background: no-repeat -250px -248px;
+	width: 5px;
+	height: 8px;
+    margin-left: 10px;
+}
+
+.icon-pagination-first{
+    background: no-repeat -206px -248px;
+	width: 5px;
+	height: 8px;
+    margin-right: 10px;
+}
+
+.icon-edit{
+    background: no-repeat -151px -63px;
+	width: 24px;
+	height: 24px;
+}
+
+.icon-copy{
+    background: no-repeat -107px -107px;
+	width: 24px;
+	height: 24px;
+}
+
+.icon-delete-small{
+    display: block;
+    background: no-repeat -416px -108px;
+	width: 30px;
+	height:30px;
+}
+
+.icon-close{
+    background: no-repeat -291px -247px;
+	width: 10px;
+	height: 10px;
+    cursor: pointer;
+}
+
+.icon-danger{
+    background: no-repeat -416px -66px;
+	width: 25px;
+	height: 20px;
+}
+
+.fa-danger{
+    font-size: 30px;
+    color: rgb(255, 196, 0);
+}
+
+
