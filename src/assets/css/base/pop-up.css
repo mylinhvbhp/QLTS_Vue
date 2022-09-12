@@ -41,13 +41,13 @@
 .pop-up__header{
     padding:24px 24px 0px 24px;
     display: flex;
-    align-items: center;
     justify-content: space-between;
 }
 
 .pop-up-title{
     font-size: 20px;
-    font-family: 'Roboto' Bold;
+    font-family: 'Roboto';
+    font-weight: bold;
 }
 
 .pop-up__content{
@@ -98,7 +98,6 @@
 #pop-up__content-notice{
     display: flex;
     flex-direction: row;
-    width: 450px;
 }
 
 /* Pop-up Info Employee */

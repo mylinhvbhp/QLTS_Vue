@@ -9,7 +9,7 @@
                     MISA QLTS
                 </div>
             </div>
-            <router-link to="/dashboard" class="menu-item">
+            <router-link to="/assets" class="menu-item">
                 <div class="menu-icon">
                     <div class="icon icon-item icon-dashboard"></div>
                     <span class="tooltip">Tổng quan</span>

@@ -1,10 +1,18 @@
 export function numberFormat(x) {
-    x=x.toFixed();
-    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+    return x.toString().replace(/^0+/, '').replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+}
+
+export function formatNumber(x){
+    try {
+        return x.split('.').join('');
+    } catch (error) {
+        console.error(error);
+        return "";
+    }
 }
 
 export function numberFormatInput(str){
-    return str.replace(/^0+/, '').replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    return str.toString().replace(/^0+/, '').replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 }
 
 export function formatDate(dob){
@@ -24,7 +32,7 @@ export function formatDate(dob){
         }
         return dob;
     } catch (error) {
-        console.log(error);
+        console.error(error);
     }
 }
 

@@ -18,7 +18,7 @@
                 <button v-if="isShowBtnSave" class="button button-save" @click="isShowFuction(false)">
                     Lưu
                 </button>
-                <button v-if="isShowBtnDelete" class="button button-save" @click="isShowFuction(false)">
+                <button v-if="isShowBtnDelete" class="button button-save" @click="deleteRecord()">
                     Xóa
                 </button>
                 <button v-if="isShowBtnClose" class="button button-save" @click="isShowFuction(false)">
@@ -33,12 +33,15 @@
 </template>
 
 <script>
+import axios from 'axios'
+
 export default {
     name:"NoticePopup",
     props:{
         listError:Array,
         isShowFuction:Function,
-        title:String
+        title:String,
+        checkList:Array
     },
     data(){
         return{
@@ -48,7 +51,26 @@ export default {
             isShowBtnCancel:false,
             isShowBtnSave:false,
             isShowBtnClose:false,
-            isShowBtnDelete:false
+            isShowBtnDelete:false,
+            checkedList:[]
+        }
+    },
+    created(){
+        this.checkedList=this.checkList;
+    },
+    methods:{
+        deleteRecord(){
+            console.error(this.checkedList);
+            try {
+                for(let i=0; i<this.checkedList.length;i++){
+                    axios.delete(`http://localhost:47555/api/v1/FixedAssets/${this.checkedList[i]}`)
+                    .then(response => {
+                        console.error(response);
+                    });
+                }    
+            } catch (error) {
+                console.error(error);
+            }
         }
     }
 }

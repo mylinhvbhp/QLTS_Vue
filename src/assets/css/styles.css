@@ -13,6 +13,8 @@
 @import url(./base/tooltip.css);
 @import url(./base/loading.css);
 @import url(./base/scroll.css);
+@import url(./base/datepicker.css);
+@import url(./base/toast-message.css);
 
 @font-face{
     font-family: MISA Google Sans;
@@ -97,4 +99,7 @@ hr{
     margin: 0px 0px;
 }
 
+@media only screen and (max-width: 600px){
+
+}
 

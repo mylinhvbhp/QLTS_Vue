@@ -4,7 +4,7 @@ import MSCombobox from './components/base/BaseCombobox.vue'
 import { createRouter, createWebHistory } from 'vue-router'
 import AssetPage from './components/page/asset/AssetPage.vue';
 import NoticePopup from './components/base/NoticePopup.vue'
-
+import UUID from 'vue-uuid'
 
 // Khai báo
 const routes = [
@@ -24,3 +24,4 @@ const app = createApp(App);
 app.component("msCombobox", MSCombobox)
 app.component("noticePopup", NoticePopup)
 app.use(vueRouter).mount('#app')
+app.use(UUID)

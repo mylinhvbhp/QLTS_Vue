@@ -1,21 +1,21 @@
 <template>
-  <!-- <select>
-        <option v-for="item in data" :key="item[this.propValue]" value="{{item[this.propValue]}}">
-            {{ item[this.propText] }}
-        </option>
-    </select> -->
   <div class="combobox">
-    <input
-      type="text"
-      class="input combobox__input"
-      v-model="text"
-      :placeholder="[[placeholder]]"
-      :tabIndex="tabIndex"
-      @input="inputOnChange"
-      @keydown="selecItemUpDown"
-    />
+    <div class="form-input">
+      <input
+        type="text"
+        class="input combobox__input"
+        v-model="text"
+        :placeholder="[[placeholder]]"
+        :tabIndex="tabIndex"
+        @input="inputOnChange"
+        @keydown="selecItemUpDown" 
+        ref="inputCombobox"
+        @blur="checkInputCombobox(this.$refs['inputCombobox'])"
+      />
+      <div v-show="!text && (this.typeCombobox=='comboboxForm') && showTooltip" class="tooltip tooltip-input" style="color:red; margin-top:-70px">{{ placeholder }} không được bỏ trống</div>
+    </div>
     <button
-      class="button combobox__button"
+      class="combobox__button"
       @click="btnSelectDataOnClick"
       @keydown="selecItemUpDown"
       tabindex="-1"
@@ -47,7 +47,7 @@
         <div class="combobox__item-icon">
           <i v-show="index == indexItemSelected" class="fa-solid fa-check"></i>
         </div>
-        {{ item[this.propText] }}
+        <p> <span style = "width:50px" v-if="(this.typeCombobox=='comboboxForm')">{{ item[this.propCode] }} - </span>{{ item[this.propText] }} </p>
       </a>
       <slot></slot>
     </div>
@@ -56,7 +56,6 @@
 <script>
 /**
  * Gán sự kiện nhấn click chuột ra ngoài combobox data (ẩn data list đi)
- * NVMANH (31/07/2022)
  */
 const clickoutside = {
   mounted(el, binding) {
@@ -80,7 +79,6 @@ const clickoutside = {
     document.body.addEventListener("click", el.clickOutsideEvent);
   },
   beforeUnmount: (el) => {
-    console.log("beforeUnmount");
     document.body.removeEventListener("click", el.clickOutsideEvent);
   },
 };
@@ -93,7 +91,7 @@ export default {
     url: String,
     propValue: String,
     propText: String,
-    propName: String,
+    propCode: String,
     isLoadData: {
       type: Boolean,
       default: true,
@@ -101,10 +99,18 @@ export default {
     placeholder: String,
     tabIndex:Number,
     valueDefault:String,
+    typeCombobox:String
   },
   methods: {
     saveItemFocus(index) {
-      this.indexItemFocus = index;
+      if(this.indexItemFocus != index){
+        this.indexItemFocus = index;
+      }
+      else{
+        let item = {};
+        this.itemOnSelect(item, index)
+        this.indexItemFocus = null;
+      }
     },
     hideListData() {
       this.isShowListData = false;
@@ -115,24 +121,35 @@ export default {
     },
 
     itemOnSelect(item, index) {
-      this.text = item[this.propText];
-      this.indexItemSelected = index;
-      this.isShowListData = false;
-      this.valueInput=item[this.propName];
-      this.$emit('getNameDepartment', this.valueInput)
-      this.$emit('getNameCategory', this.valueInput)
+      if(this.indexItemSelected != index){
+        this.text = item[this.propCode];
+        this.indexItemSelected = index;
+        this.isShowListData = false;
+        this.valueInput=item[this.propText];
+        this.$emit('getName', this.valueInput, item[this.propValue])
+        this.$emit('getID',item[this.propValue])
+      }else{
+        this.indexItemSelected=null;
+        this.isShowListData = false;
+        this.text="";
+        this.valueInput="";
+        this.$emit('getName', "", "")
+        this.$emit('getID',"")
+      }
+      
     },
 
-    inputOnChange() {
+    inputOnChange() {  
       var me = this;
       // Thực hiện lọc các phần tử phù hợp trong data:
       this.dataFilter = this.data.filter((e) => {
-        let valueCode = e[me.propText].includes(me.text);
-        let valueName = e[me.propName].includes(me.valueInput);
+        let valueName = e[me.propText].includes(me.text);
+        let valueCode = e[me.propCode].includes(me.valueInput);
         return valueCode,valueName;
       });
       this.isShowListData = true;
     },
+
     selecItemUpDown() {
       var me = this;
       var keyCode = event.keyCode;
@@ -178,6 +195,21 @@ export default {
           break;
       }
     },
+
+    checkInputCombobox(input){
+      try {
+          if (!input.value && this.typeCombobox=="comboboxForm" ) {
+              input.classList.add("border-red");
+              this.showTooltip = true;
+          }
+          else {
+              input.classList.remove("border-red");
+              this.showTooltip = false;
+          }
+      } catch (error) {
+          console.error(error);
+      }
+    }
   },
   created() {
     // Thực hiện lấy dữ liệu từ api:
@@ -189,7 +221,7 @@ export default {
           this.dataFilter = res;
         })
         .catch((res) => {
-          console.log(res);
+          console.error(res);
         });
     }
     this.text=this.valueDefault;
@@ -206,6 +238,7 @@ export default {
       indexItemFocus: null,
       indexItemSelected: null,
       maxIndexItemFocus: 0,
+      showTooltip:false
     };
   },
 };
