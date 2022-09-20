@@ -19,6 +19,7 @@ td{
 
 th{
     text-align: left;
+    cursor: default;
 }
 
 thead{

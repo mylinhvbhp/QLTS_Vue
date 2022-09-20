@@ -57,7 +57,8 @@ export default {
         deleteInfo: Object,
         isShowDialogFunction:Function,
         toastMessageFucntion:Function,
-        saveFormFunction:Function
+        saveFormFunction:Function,
+        resetCheckedListFunction:Function
     },
     data(){
         return{
@@ -74,25 +75,25 @@ export default {
     },
     created(){
         try {
+            //Form edit khi chọn hủy thì notice sẽ có các button Hủy bỏ, Không lưu và Lưu
             if(this.title == "edit"){
                 this.isShowBtnEditCancel=true;
                 this.isShowBtnNoSave=true;
                 this.isShowBtnSave=true;
             }
+            //Form add khi chọn hủy thì notice sẽ có các button Không, Hủy bỏ
             if(this.title == "add"){
                 this.isShowBtnNo=true;
                 this.isShowBtnCancel=true;
             }
-            if(this.title == "delete"){
+            //Form xóa nhiều khi hiện notice sẽ có các button Xóa và Không
+            if(this.title == "delete" || this.title == "deleteOne"){
                 this.isShowBtnDelete=true;
                 this.isShowBtnNo=true;
             }
+            //Notice confirm thì chỉ có button Đồng ý
             if(this.title == "confirm"){
                 this.isShowBtnConfirm=true;
-            }
-            if(this.title == "deleteOne"){
-                this.isShowBtnDelete=true;
-                this.isShowBtnNo=true;
             }
 
             this.checkedList=this.checkList;
@@ -107,8 +108,10 @@ export default {
          */
         deleteRecord(){
             try {
-                //Xóa 1
-                this.checkedList.push(this.deleteInfo.id);
+                //Khi người dùng chọn icon xóa ở cột chức năng thì thêm id của bản ghi vào list xóa
+                if(this.title == "deleteOne"){
+                    this.checkedList.push(this.deleteInfo.id);
+                }
                 
                 const requestOptions = {
                     method: "DELETE",
@@ -119,9 +122,13 @@ export default {
                 fetch("http://localhost:47555/api/v1/FixedAssets", requestOptions)
                     .then(res => {
                         res.json();
+                        //Load lại dữ liệu
                         this.filterData();
+                        //Mặc định xóa thành công thì checked bản ghi đầu tiên
+                        this.resetCheckedListFunction();
+                        //Đóng notice
                         this.isShowFuction(false);
-                        this.toastMessageFucntion("Xóa")
+                        this.toastMessageFucntion("Xóa");
                     })
                     .then(data => { data }) 
             } catch (error) {
@@ -134,12 +141,16 @@ export default {
          * Author: Nguyễn Thị Mỹ Linh - 08/09/2022
          */
         saveFormInNotice(){
-            //Lưu thông tin
-            this.saveFormFunction();
-            //Đóng notice
-            this.isShowFuction(false); 
-            //Đóng dialog sửa
-            this.isShowDialogFunction(false);
+            try {
+                //Lưu thông tin
+                this.saveFormFunction();
+                //Đóng notice
+                this.isShowFuction(false); 
+                //Đóng dialog sửa
+                this.isShowDialogFunction(false); 
+            } catch (error) {
+                console.log(error);
+            }
         }
     }
 }

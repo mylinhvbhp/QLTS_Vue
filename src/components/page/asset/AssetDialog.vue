@@ -1,5 +1,8 @@
 <template>
-    <div class="pop-up pop-up-info" id="pop-up-asset">
+    <div class="pop-up pop-up-info" id="pop-up-asset" 
+        @keydown.enter.prevent="saveForm(asset)"
+        @keyup.esc.prevent="isShowDialogFunction(false)"
+    >
         <div class="pop-up-container">
             <div class="pop-up__header">
                 <div v-show="title=='add'" class="pop-up-title">
@@ -23,35 +26,33 @@
                         <div class="form-content">
                             <div class="form-item">
                                 <div class="form-lable">Mã tài sản <span style="color:red">*</span></div>
-                                <div class="form-input">
+                                <div class="form-input" id="txtAssetCode">
                                     <input type="text" class="input" 
-                                        id="txtAssetCode" 
                                         name="Mã tài sản" 
                                         v-model="asset.fixedAssetCode" 
                                         tabindex="1" 
                                         ref="txtAssetCode"
-                                        @blur="checkInput('assetCode',this.$refs['txtAssetCode'])" 
+                                        @blur="checkInput('txtAssetCode',this.$refs['txtAssetCode'])" 
                                         maxlength="20"
                                         required
                                     >
-                                    <div id="assetCode" class="tooltip" style="color:red; margin-top:-70px">Mã tài sản không được bỏ trống</div>
+                                    <div class="tooltip" style="color:red; margin-top:-70px">Mã tài sản không được bỏ trống</div>
                                 </div>
                             </div>
                             <div class="form-item form-item-two">
                                 <div class="form-lable">Tên tài sản <span style="color:red">*</span></div>
-                                <div class="form-input">
+                                <div class="form-input" id="txtAssetName">
                                     <input type="text" class="input" 
-                                        id="txtAssetName" 
                                         name="Tên tài sản" 
                                         v-model="asset.fixedAssetName" 
                                         placeholder="Nhập tên tài sản" 
                                         tabindex="2"
                                         ref="txtAssetName" 
-                                        @blur="checkInput('assetName',this.$refs['txtAssetName'])" 
+                                        @blur="checkInput('txtAssetName',this.$refs['txtAssetName'])" 
                                         maxlength="225"
                                         required
                                     >
-                                    <div id="assetName" class="tooltip" style="color:red; margin-top:-70px">Tên tài sản không được bỏ trống</div>
+                                    <div class="tooltip" style="color:red; margin-top:-70px">Tên tài sản không được bỏ trống</div>
                                 </div>
                             </div>
                             <div class="form-item">
@@ -66,6 +67,7 @@
                                     :valueDefault="asset.departmentCode"
                                     :tabIndex="3"
                                     :typeCombobox="typeCombobox"
+                                    :validateCombobox="validateCombobox"
                                 ></msCombobox>
                             </div>
                             <div class="form-item form-item-two">
@@ -90,6 +92,7 @@
                                     :tabIndex="4"
                                     :valueDefault="asset.fixedAssetCategoryCode"
                                     :typeCombobox="typeCombobox"
+                                    :validateCombobox="validateCombobox"
                                 ></msCombobox>
                             </div>
                             <div class="form-item form-item-two">
@@ -103,7 +106,7 @@
                             </div>
                             <div class="form-item">
                                 <div class="form-lable">Số lượng <span style="color:red">*</span></div>
-                                <div class="form-input">
+                                <div class="form-input" id="txtQuantity">
                                     <div class="combo-icon">
                                         <div class="icon icon-up" @click="upNumber('quantity')"></div>
                                         <div class="icon icon-down" @click="downNumber('quantity')"></div>
@@ -115,29 +118,29 @@
                                         tabindex="5" 
                                         @input="numberFormatInput()" 
                                         ref="txtQuantity" 
-                                        @blur="checkInputNumber('quantity',this.$refs['txtQuantity'])"
+                                        @blur="checkInputNumber('txtQuantity',this.$refs['txtQuantity'])"
                                     >
-                                    <div id="quantity" class="tooltip" style="color:red; margin-top:-70px">Số lượng không được bỏ trống</div>
+                                    <div class="tooltip" style="color:red; margin-top:-70px">Số lượng không được bỏ trống</div>
                                 </div>
                             </div>
                             <div class="form-item">
                                 <div class="form-lable">Nguyên giá <span style="color:red">*</span></div>
-                                <div class="form-input">
+                                <div class="form-input" id="txtCost">
                                     <input type="text" 
                                         class="input input-number" 
                                         v-model="asset.cost" 
                                         tabindex="6" 
-                                        @change="updateRate()"
+                                        @change="updateDepreciationValue()"
                                         @input="numberFormatInput()" 
                                         ref="txtCost" 
-                                        @blur="checkInputNumber('cost',this.$refs['txtCost'])"
+                                        @blur="checkInputNumber('txtCost',this.$refs['txtCost'])"
                                     >
-                                    <div id="cost" class="tooltip" style="color:red ; margin-top:-70px">Nguyên giá không được bỏ trống</div>
+                                    <div class="tooltip" style="color:red ; margin-top:-70px">Nguyên giá không được bỏ trống</div>
                                 </div>
                             </div>
                             <div class="form-item">
                                 <div class="form-lable">Số năm sử dụng <span style="color:red">*</span></div>
-                                <div class="form-input">
+                                <div class="form-input" id="txtLifeTime">
                                     <div class="combo-icon">
                                         <div class="icon icon-up" @click="upNumber('life_time')"></div>
                                         <div class="icon icon-down" @click="downNumber('life_time')"></div>
@@ -146,16 +149,16 @@
                                         class="input input-number-icon" 
                                         v-model="asset.lifeTime" 
                                         tabindex="7"
-                                        @change="updateRate()"
+                                        @change="updateDepreciationRate()"
                                         ref="txtLifeTime" 
-                                        @blur="checkInputNumber('lifeTime',this.$refs['txtLifeTime'])"
+                                        @blur="checkInputNumber('txtLifeTime',this.$refs['txtLifeTime'])"
                                     >
-                                    <div id="lifeTime" class="tooltip" style="color:red; margin-top:-70px">Số năm sử dụng không được bỏ trống</div>
+                                    <div class="tooltip" style="color:red; margin-top:-70px">Số năm sử dụng không được bỏ trống</div>
                                 </div>
                             </div>
                             <div class="form-item">
                                 <div class="form-lable">Tỉ lệ hao mòn (%) <span style="color:red">*</span></div>
-                                <div class="form-input">
+                                <div class="form-input" id="txtDepreciationRate">
                                     <div class="combo-icon">
                                         <div class="icon icon-up" @click="upNumber('depreciation_rate')"></div>
                                         <div class="icon icon-down" @click="downNumber('depreciation_rate')"></div>
@@ -164,26 +167,30 @@
                                         class="input input-number-icon" 
                                         v-model="asset.depreciationRate" 
                                         tabindex="8" 
-                                        @change="updateRate()" 
+                                        @change="updateDepreciationValue();" 
                                         @input="numberFormatInput()" 
                                         ref="txtDepreciationRate"
-                                        @blur="checkInputNumber('depreciationRate',this.$refs['txtDepreciationRate'])"
+                                        @blur="checkInputNumber('txtDepreciationRate',this.$refs['txtDepreciationRate'])"
+                                        :class="{'border-red':isShowErrorRate}"
                                     > 
-                                    <div id="depreciationRate" class="tooltip" style="color:red; margin-top:-70px">Tỉ lệ hao mòn không được bỏ trống</div>
+                                    <div class="tooltip" style="color:red; margin-top:-70px">Tỉ lệ hao mòn không được bỏ trống</div>
+                                    <div class="tooltip1" style="color:red; margin-top:-70px">Tỉ lệ hao mòn phải &#60;= {{ Math.round(((1/this.asset.lifeTime)*100)*100)/100 }}</div>
                                 </div>
                             </div>
                             <div class="form-item">
                                 <div class="form-lable">Giá trị hao mòn năm <span style="color:red">*</span></div>
-                                <div class="form-input">
+                                <div class="form-input" id="txtDepreciationValue">
                                     <input type="text" 
                                         class="input input-number" 
                                         v-model="asset.depreciationValue" 
                                         tabindex="9"
                                         @input="numberFormatInput()"
                                         ref="txtDepreciationValue" 
-                                        @blur="checkInputNumber('depreciationValue',this.$refs['txtDepreciationValue'])"
+                                        @blur="checkInputNumber('txtDepreciationValue',this.$refs['txtDepreciationValue'])"
+                                        @change="checkDepreaciationValue()"
                                     >
-                                    <div id="depreciationValue" class="tooltip" style="color:red; margin-top:-70px">Giá trị hao mòn năm không được bỏ trống</div>
+                                    <div class="tooltip" style="color:red; margin-top:-70px">Giá trị hao mòn không được bỏ trống</div>
+                                    <div class="tooltip1" style="color:red; margin-top:-70px">Giá trị hao mòn phải &#60;= {{this.depreciationValue}}</div>
                                 </div>
                             </div>
                             <div class="form-item">
@@ -299,10 +306,14 @@ export default {
             depreciationValue:0,
             isShowNotice:false,
             messageList:[],
+            validateList:[],
             message:"",
             titleMessage:"",
             typeCombobox:"comboboxForm",
             showTooltip:false,
+            validateCombobox:false,
+            isShowErrorRate:false,
+
         }
         
     },
@@ -313,10 +324,11 @@ export default {
             this.asset=this.assetSelected;
         }
         this.numberFormatInput();
-        this.updateRate();
+        this.updateDepreciationValue();
         if(this.title=="add" || this.title=="copy"){
             this.newCode();
         }
+
     },
     mounted(){
         //Mặc định đặt con trỏ vào textbox đầu tiên
@@ -330,13 +342,18 @@ export default {
          * Author:Nguyễn Thị Mỹ Linh - 14/08/2022
          */
         newCode(){
-            axios.get("http://localhost:47555/api/v1/FixedAssets/new-code")
-            .then(response => {
-                this.asset.fixedAssetCode = response.data
-            })
-            .catch(e => {
-                console.log(e);
-            })
+            try {
+                axios.get("http://localhost:47555/api/v1/FixedAssets/autoID")
+                .then(response => {
+                    this.asset.fixedAssetCode = response.data
+                })
+                .catch(e => {
+                    console.log(e);
+                }) 
+            } catch (error) {
+                console.log(error);
+            }
+            
         },
 
         /**
@@ -345,9 +362,9 @@ export default {
          */
         numberFormatInput(){
             try {
-                    this.asset.cost = numberFormat(this.asset.cost)
-                    this.asset.quantity = numberFormat(this.asset.quantity)
-                    this.asset.depreciationValue = numberFormat(this.asset.depreciationValue)
+                this.asset.cost = numberFormat(this.asset.cost)
+                this.asset.quantity = numberFormat(this.asset.quantity)
+                this.asset.depreciationValue = numberFormat(this.asset.depreciationValue)
             } catch (error) {
                 console.log(error);
             }
@@ -394,11 +411,12 @@ export default {
                 //Đối với tỉ lệ hao mòn
                 else if(input == "depreciation_rate"){
                     this.asset.depreciationRate++;
-                    this.updateRate();
+                    this.updateDepreciationValue();
                 }
                 //Đối với số năm sử dụng
                 else if(input == "life_time"){
                     this.asset.lifeTime++;
+                    this.updateDepreciationRate();
                 }
             } catch (error) {
                 console.log(error);
@@ -425,7 +443,7 @@ export default {
                 else if(input == "depreciation_rate"){
                     if(this.asset.depreciationRate>0){
                         this.asset.depreciationRate--;
-                    this.updateRate();
+                        this.updateDepreciationValue();
                     }
                     else{
                         this.asset.depreciationRate=0;
@@ -435,6 +453,7 @@ export default {
                 else if(input == "life_time"){
                     if(this.asset.lifeTime>0){
                         this.asset.lifeTime--;
+                        this.updateDepreciationRate();
                     }
                     else{
                         this.asset.lifeTime=0;
@@ -449,9 +468,68 @@ export default {
          * Tính giá trị hao mòn khi thay đổi Tỉ lệ hao mòn hoặc Nguyên giá
          * Author: Nguyễn Thi Mỹ Linh - 14/08/2022
          */
-        updateRate(){
+        updateDepreciationValue(){
             try {
-                this.asset.depreciationValue = numberFormat((this.asset.cost).replace(/[^0-9]/g, '') * (this.asset.depreciationRate / 100));
+                let x = Math.floor((this.asset.cost).replace(/[^0-9]/g, '')) * (this.asset.depreciationRate / 100);
+                this.asset.depreciationValue=numberFormat(x.toFixed());
+                this.checkDepreciationRate();
+                this.checkDepreaciationValue();
+            } catch (error) {
+                console.log(error);
+            }
+        },
+
+        /**
+         * Kiểm tra tỷ lệ hao mòn
+         * Author: Nguyễn Thị Mỹ Linh - 10/09/2022
+         */
+        checkDepreciationRate(){
+            try {
+                if(this.asset.depreciationRate > Math.round(((1/this.asset.lifeTime)*100)*100)/100){
+                    this.$refs['txtDepreciationRate'].classList.add("border-red");
+                    document.getElementById('txtDepreciationRate').classList.add("tooltip-input1");
+                }else{
+                    this.$refs['txtDepreciationRate'].classList.remove("border-red");
+                    document.getElementById('txtDepreciationRate').classList.remove("tooltip-input1");   
+                }
+            } catch (error) {
+                console.log(error);
+            }
+        },
+
+        /**
+         * Tính tỉ lệ hao mòn khi nhập Số năm sử dụng
+         * Author: Nguyễn Thị Mỹ Linh - 10/09/2022
+         */
+        updateDepreciationRate(){
+            try {
+                this.asset.depreciationRate = Math.round(((1/this.asset.lifeTime)*100)*100)/100;
+                this.updateDepreciationValue();
+                this.checkDepreaciationValue();
+            } catch (error) {
+                console.log(error);
+            }
+        },
+        
+        /**
+         * Kiểm tra giá trị hao mòn năm
+         * Author: Nguyễn Thị Mỹ Linh - 10/09/2022
+         */
+        checkDepreaciationValue(){
+            try {
+                
+                let maxValue = Math.floor((this.asset.cost).replace(/[^0-9]/g, '')) / this.asset.lifeTime;
+                let value = Math.floor((this.asset.depreciationValue).replace(/[^0-9]/g, '')) * this.asset.lifeTime;
+                let cost = Math.floor((this.asset.cost).replace(/[^0-9]/g, ''));
+                
+                this.depreciationValue = numberFormat(maxValue.toFixed());
+                if(value > cost){
+                    this.$refs['txtDepreciationValue'].classList.add("border-red");
+                    document.getElementById('txtDepreciationValue').classList.add("tooltip-input1");
+                }else{
+                    this.$refs['txtDepreciationValue'].classList.remove("border-red");
+                    document.getElementById('txtDepreciationValue').classList.remove("tooltip-input1");
+                }
             } catch (error) {
                 console.log(error);
             }
@@ -479,12 +557,11 @@ export default {
                 if (!input.value) {
                     input.classList.add("border-red");
                     document.getElementById(inputName).classList.add("tooltip-input");
-                    this.showTooltip=true;
                 }
                 else {
                     input.classList.remove("border-red");
                     document.getElementById(inputName).classList.remove("tooltip-input");
-                    this.showTooltip=false;
+                    this.checkDepreciationRate();
                 }
             } catch (error) {
                 console.log(error);
@@ -500,6 +577,8 @@ export default {
                 else {
                     input.classList.remove("border-red");
                     document.getElementById(inputName).classList.remove("tooltip-input");
+                    this.checkDepreciationRate();
+                    this.checkDepreaciationValue();
                 }
             } catch (error) {
                 console.log(error);
@@ -528,13 +607,50 @@ export default {
         validateForm(){
             try {
                 //Làm rỗng danh sách lỗi
-                this.messageList=[];
-                //Kiểm tra nếu có bất kì input bắt buộc nào còn trống thì hiện lỗi
-                if(!this.asset.fixedAssetCode || !this.asset.fixedAssetName || !this.asset.departmentID ||
-                   !this.asset.fixedAssetCategoryID || !this.asset.quantity || !this.asset.cost || !this.asset.depreciationRate || 
-                   !this.asset.purchaseDate || !this.asset.productionDate || !this.asset.lifeTime || !this.asset.depreciationValue){
-                    this.messageList=[];
-                    this.messageList.push("Thông tin chưa đầy đủ. Vui lòng nhập đầu đủ thông tin!");
+                this.validateList=[];
+                //Kiểm tra từng trường dữ liệu
+                if(!this.asset.fixedAssetCode){
+                    this.validateList.push("txtAssetCode");
+                    this.$refs["txtAssetCode"].classList.add("border-red");
+                    document.getElementById("txtAssetCode").classList.add("tooltip-input");
+                }
+                if(!this.asset.fixedAssetName){
+                    this.validateList.push("txtAssetName");
+                    this.$refs["txtAssetName"].classList.add("border-red");
+                    document.getElementById("txtAssetName").classList.add("tooltip-input");
+                }
+                if(!this.asset.departmentID){
+                    this.validateList.push("txtDepartmentID");
+                    this.validateCombobox=true;
+                }
+                if(!this.asset.fixedAssetCategoryID){
+                    this.validateList.push("txtFixedAssetCategoryID");
+                    this.validateCombobox=true;
+                }
+                if(!this.asset.quantity){
+                    this.validateList.push("txtQuantity");
+                    this.$refs["txtQuantity"].classList.add("border-red");
+                    document.getElementById("txtQuantity").classList.add("tooltip-input");
+                }
+                if(!this.asset.cost){
+                    this.validateList.push("txtCost");
+                    this.$refs["txtCost"].classList.add("border-red");
+                    document.getElementById("txtCost").classList.add("tooltip-input");
+                }
+                if(!this.asset.depreciationRate){
+                    this.validateList.push("txtDepreciationRate");
+                    this.$refs["txtDepreciationRate"].classList.add("border-red");
+                    document.getElementById("txtDepreciationRate").classList.add("tooltip-input");
+                }
+                if(!this.asset.depreciationValue){
+                    this.validateList.push("txtDepreciationValue");
+                    this.$refs["txtDepreciationValue"].classList.add("border-red");
+                    document.getElementById("txtDepreciationValue").classList.add("tooltip-input");
+                }
+                if(!this.asset.lifeTime){
+                    this.validateList.push("txtLifeTime");
+                    this.$refs["txtLifeTime"].classList.add("border-red");
+                    document.getElementById("txtLifeTime").classList.add("tooltip-input");
                 }
             } catch (error) {
                 console.log(error);
@@ -574,12 +690,11 @@ export default {
          * Author: Nguyễn Thị Mỹ Linh - 27/08/2022
          */
         saveForm(){
-            debugger;
             try {
                 //Validate dữ liệu
                 this.validateForm();
                 //Kiểm tra nếu danh sách lỗi rỗng thì mới cho sửa hoặc thêm
-                if(this.messageList.length==0){
+                if(this.validateList.length==0){
                     //Sửa
                     if(this.title == "edit"){
                         //Chuẩn bị dữ liệu đầu vào
@@ -657,7 +772,12 @@ export default {
                                 //Đóng dialog thêm
                                 this.dialogFunction(false);
                                 //Hiển thị toast message
-                                this.toastMessageFucntion("Thêm")
+                                if(this.title == "add"){
+                                   this.toastMessageFucntion("Thêm") 
+                                }
+                                else if(this.title == "copy"){
+                                    this.toastMessageFucntion("Nhân bản")
+                                }
                                 //Gửi ID của bản ghi vùa thêm lên component cha để checked bản ghi
                                 this.$emit("getIdAsset", res.data);
                             })
@@ -675,12 +795,6 @@ export default {
                             })
                     }
                 }
-                //Nếu danh sách lỗi có thì hiển thị thông báo lỗi
-                else{
-                    this.titleMessage="confirm";
-                    this.isShowNotice=true;
-                }
-
             } catch (error) {
                 console.log(error);
             }

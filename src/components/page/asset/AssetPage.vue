@@ -3,7 +3,15 @@
         <div class="content-top-left">
             <div class="search-input">
                 <div class="icon icon-search-input"></div>
-                <input style="text-transform: capitalize;" type="text" class="input input-search" ref="txtSearch" v-model="filterInfo.keyWord" placeholder="Tìm kiếm tài sản" @change="searchData(filterInfo.keyWord)">
+                <input 
+                    style="text-transform: capitalize;" 
+                    type="text" 
+                    class="input input-search" 
+                    ref="txtSearch" 
+                    v-model="filterInfo.keyWord" 
+                    placeholder="Tìm kiếm tài sản" 
+                    @change="searchData(filterInfo.keyWord)"
+                >
             </div>
             <div class="search-filter">
                 <div class="icon icon-search-filter"></div>
@@ -32,6 +40,7 @@
             <button class="button button-add button-main" @click="openOrCloseDialog(true,'add')">
                 <div class="icon icon-button-add"></div>
                 Thêm tài sản
+                <span class="tooltip">Ctrl + I</span>
             </button>
             <div class="content-right-icon">
                 <div class="button-icon">
@@ -114,10 +123,10 @@
                         {{ numberFormat(asset.cost) || ""}}
                     </td>
                     <td class="float-right">
-                        {{numberFormat((asset.cost*(asset.depreciationRate/100)*asset.lifeTime).toFixed()) || ""}}
+                        {{numberFormat(Math.round(((asset.depreciationValue*(new Date().getFullYear() - new Date(asset.productionDate).getFullYear())))*100)/100) || ""}}
                     </td>
                     <td class="float-right">
-                        {{numberFormat(asset.cost - (asset.cost*(asset.depreciationRate/100)*asset.lifeTime)) || ""}}
+                        {{ numberFormat(Math.round(((asset.cost - (asset.depreciationValue*(new Date().getFullYear() - new Date(asset.productionDate).getFullYear()))))*100)/100) }}
                     </td>
                     <td>
                         <div class="table-function-icon">
@@ -208,6 +217,7 @@
         :filterData="filterData"
         :deleteInfo="deleteInfo"
         :toastMessageFucntion="showToastMessage"
+        :resetCheckedListFunction="resetCheckedList"
     >
     </assetNotice>
 
@@ -264,6 +274,7 @@ export default {
     mounted(){
         //Mặc định focus con trỏ tại vị trí search khi vào trang
         this.$refs.txtSearch.focus();
+        document.addEventListener('keydown', this.openAddDialog);
     },
     methods:{
         /**
@@ -376,8 +387,14 @@ export default {
                 axios.get(`http://localhost:47555/api/v1/FixedAssets/filter?keyword=${this.filterInfo.keyWord}&departmentID=${this.filterInfo.departmentID}&fixedAssetCategoryID=${this.filterInfo.fixedAssetCategoryID}&pageSize=${this.filterInfo.pageSize}&pageNumber=${this.filterInfo.pageNumber}`)
                     .then(response => {
                         this.assets = response.data.data
+                        //phân trang
                         this.totalRecord = response.data.totalCount
                         this.pagingInfo.totalPage = Math.ceil(this.totalRecord / this.filterInfo.pageSize);
+                        //checked vào bản ghi đầu tiên
+                        this.checkedList=[];
+                        this.checkedList.push(this.assets[0].fixedAssetId);
+                        this.deleteInfo={};
+                        this.deleteInfo={id:this.assets[0].fixedAssetId, code:this.assets[0].fixedAssetCode, name:this.assets[0].fixedAssetName}
                         //tính các tổng trong bảng
                         let data = this.assets;
                         for(let i=0;i<data.length;i++){
@@ -386,7 +403,7 @@ export default {
                             //tổng nguyên giá
                             this.totalCost+=data[i].cost;
                             //tổng hao mòn/khấu hao lũy kế
-                            this.totalDepreciation+=data[i].cost*(data[i].depreciationRate/100)*data[i].lifeTime;
+                            this.totalDepreciation+=data[i].depreciationValue*(new Date().getFullYear() - new Date(data[i].productionDate).getFullYear());
                             //tổng giá trị còn lại
                             this.totalRealCost=(this.totalCost-this.totalDepreciation);
                         }
@@ -540,9 +557,11 @@ export default {
                 }
                 //3. Trường hợp người dùng không ấn giữ phím nào
                 else {
-                    if(this.checkRow(asset.fixedAssetId) && this.checkedList.length==1){
+                    if(this.checkRow(asset.fixedAssetId) && this.checkedList.length!=0){
                         let i = this.checkedList.indexOf(asset.fixedAssetId);
                         this.checkedList.splice(i,1); 
+                       //Kiểm tra nếu người dùng chọn tất cả bản ghi thì tự động checked checkbox cha và ngược lại
+                        this.checkRows();
                         // this.checkedList = [];
                         // this.deleteList=[]
                     }else{
@@ -554,8 +573,11 @@ export default {
                         //3.3 Thêm bản ghi vào list bản ghi được chọn
                         this.checkedList.push(asset.fixedAssetId);
                         this.deleteList.push(asset);
+                        this.deleteInfo={id:asset.fixedAssetId, code:asset.fixedAssetCode, name:asset.fixedAssetName}
                         //3.4 Xóa trạng thái checked của checkbox cha
                         this.checkAll = false;
+                        //Kiểm tra nếu người dùng chọn tất cả bản ghi thì tự động checked checkbox cha và ngược lại
+                        this.checkRows();
                     }
                 }
             } catch (error) {
@@ -597,7 +619,7 @@ export default {
         },
 
         /**
-         * Xóa bản ghi
+         * Xóa bản ghi (Chọn xóa cạnh button thêm mới)
          * Author: Nguyễn Thị Mỹ Linh - 16/08/2022
          */
         deleteData(){
@@ -621,7 +643,7 @@ export default {
         },
 
         /**
-         * Xóa 1 bản ghi
+         * Xóa 1 bản ghi (Chọn icon xóa ở cột chức năng)
          * Author: LinhNTM(26/08/2022)
          */
         deleteOne(id,code, name){
@@ -635,6 +657,20 @@ export default {
                 this.assetID = id;
             } catch (error) {
                 console.log(error);
+            }
+        },
+
+        /**
+         * Sau khi xóa tự động checked bản ghi đầu tiên
+         * Author: LinhNTM (13/09/2022)
+         */
+        resetCheckedList(){
+            try {
+                this.checkedList=[];
+                this.checkedList.push(this.assets[0].fixedAssetId);
+                this.deleteInfo={id:this.assets[0].fixedAssetId, code:this.assets[0].fixedAssetCode, name:this.assets[0].fixedAssetName}
+            } catch (error) {
+                error
             }
         },
 
@@ -679,7 +715,21 @@ export default {
             this.checkedList=[];
             this.checkedList.push(id);
             this.checkRow(id);
-        }
+            this.checkAll=false;
+        },
+
+        /**
+         * Mở form sửa bằng phím tắt
+         */
+        openAddDialog(e) {
+            try {
+                if(e.keyCode == 73 && e.ctrlKey){
+                    this.openOrCloseDialog(true, "add");
+                }
+            } catch (error) {
+                console.log(error);
+            }
+        },
     },
     computed: {
         startPage() {

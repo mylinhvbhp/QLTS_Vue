@@ -1,6 +1,6 @@
 <template>
   <div class="combobox">
-    <div class="form-input">
+    <div class="form-input" :class="{'tooltip-input': validateCombobox || showTooltip}">
       <input
         type="text"
         class="input combobox__input"
@@ -11,8 +11,10 @@
         @keydown="selecItemUpDown" 
         ref="inputCombobox"
         @blur="checkInputCombobox(this.$refs['inputCombobox'])"
+        :class="{'border-red': validateCombobox}"
       />
-      <div v-show="!text && (this.typeCombobox=='comboboxForm') && showTooltip" class="tooltip tooltip-input" style="color:red; margin-top:-70px">{{ placeholder }} không được bỏ trống</div>
+      <div v-show="text" class="icon icon-delete-filter" @click="deleteFilter()"></div>
+      <div v-if="!text && (this.typeCombobox=='comboboxForm') && (showTooltip || validateCombobox)" class="tooltip" style="color:red; margin-top:-70px">{{ placeholder }} không được bỏ trống</div>
     </div>
     <button
       class="combobox__button"
@@ -99,7 +101,8 @@ export default {
     placeholder: String,
     tabIndex:Number,
     valueDefault:String,
-    typeCombobox:String
+    typeCombobox:String,
+    validateCombobox:Boolean
   },
   methods: {
     saveItemFocus(index) {
@@ -196,6 +199,10 @@ export default {
       }
     },
 
+    /**
+     * Kiểm tra combobox có bị trống hay không
+     * Author: Nguyễn Thị Mỹ Linh - 10/09/2022
+     */
     checkInputCombobox(input){
       try {
           if (!input.value && this.typeCombobox=="comboboxForm" ) {
@@ -208,6 +215,24 @@ export default {
           }
       } catch (error) {
           console.error(error);
+      }
+    },
+
+    /**
+     * Xóa filter
+     * Athor: Nguyễn Thị Mỹ Linh - 19/09/2022
+     */
+    deleteFilter(){
+      try {
+        this.indexItemSelected=null;
+        this.isShowListData = false;
+        this.indexItemFocus = null;
+        this.text="";
+        this.valueInput="";
+        this.$emit('getName', "", "")
+        this.$emit('getID',"")
+      } catch (error) {
+        console.log(error);
       }
     }
   },

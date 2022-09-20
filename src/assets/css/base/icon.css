@@ -216,4 +216,13 @@
     color: rgb(255, 196, 0);
 }
 
+.icon-delete-filter{
+    background: no-repeat -291px -247px;
+	width: 10px;
+	height: 10px;
+    position:absolute;
+    right:35px;
+    cursor: pointer;
+}
+
 
